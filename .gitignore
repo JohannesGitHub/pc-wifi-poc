@@ -1,0 +1,10 @@
+node_modules/
+env/
+
+.vscode
+.DS_Store
+
+channel.db
+channel.db.lock
+
+silence.mp3

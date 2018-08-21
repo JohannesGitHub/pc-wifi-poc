@@ -1,0 +1,25 @@
+# unzip 1726-154.zip
+sudo apt-get update
+sudo apt-get upgrade
+cd /boot/
+sudo apt-get install hostapd dnsmasq
+sudo cp 1726-154/default/* /etc/default
+sudo cp -a 1726-154/hostapd /etc
+sudo cp 1726-154/dnsmasq.conf  /etc
+sudo cp 1726-154/network/interfaces /etc/network
+sudo nano /etc/sysctl.conf
+	#uncomment the following line
+	net.ipv4.ip_forward=1
+sudo nano /etc/hostapd/hostapd.conf
+	#change ssid
+	ssid=PaymentChannelHotspot
+	
+sudo iptables -A PREROUTING -t mangle -i wlan0 -m mark --mark 0 -j MARK --set-mark 1
+sudo iptables -A FORWARD -m mark --mark 1 -j DROP
+sudo iptables -A POSTROUTING -t nat -o eth0 -m mark --mark 2 -j MASQUERADE
+
+sudo apt-get install iptables-persistent
+
+sudo cp 1726-154/wlanguests/wlanguests.* /etc/systemd/system
+sudo cp 1726-154/wlanguests/wlanguestsctl /usr/local/bin
+sudo systemctl enable wlanguests.path
